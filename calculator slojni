@@ -1,0 +1,123 @@
+using System;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Console.WriteLine("Расширенный калькулятор");
+        Console.WriteLine("Доступные операции: +, -, *, /, ^, sqrt, abs, sin, cos, tan");
+        Console.WriteLine("Доступные формулы: 1 - Периметр прямоугольника, 2 - Площадь круга, 3 - Квадратное уравнение, 4 - Теорема Пифагора");
+        Console.Write("Выберите режим (операция или формула): ");
+        string choice = Console.ReadLine();
+
+        if (choice == "1" || choice == "2" || choice == "3" || choice == "4")
+        {
+            ExecuteFormula(choice);
+        }
+        else
+        {
+            ExecuteOperation(choice);
+        }
+    }
+
+    static void ExecuteOperation(string operation)
+    {
+        double num1, num2 = 0;
+
+        if (operation != "sqrt" && operation != "abs" && operation != "sin" && operation != "cos" && operation != "tan")
+        {
+            Console.Write("Введите первое число: ");
+            num1 = Convert.ToDouble(Console.ReadLine());
+
+            Console.Write("Введите второе число: ");
+            num2 = Convert.ToDouble(Console.ReadLine());
+        }
+        else
+        {
+            Console.Write("Введите число: ");
+            num1 = Convert.ToDouble(Console.ReadLine());
+        }
+
+        double result = operation switch
+        {
+            "+" => num1 + num2,
+            "-" => num1 - num2,
+            "*" => num1 * num2,
+            "/" => num2 != 0 ? num1 / num2 : throw new DivideByZeroException("Деление на ноль!"),
+            "^" => Math.Pow(num1, num2),
+            "sqrt" => Math.Sqrt(num1),
+            "abs" => Math.Abs(num1),
+            "sin" => Math.Sin(num1),
+            "cos" => Math.Cos(num1),
+            "tan" => Math.Tan(num1),
+            _ => throw new InvalidOperationException("Некорректная операция")
+        };
+
+        Console.WriteLine($"Результат: {result}");
+    }
+
+    static void ExecuteFormula(string formula)
+    {
+        switch (formula)
+        {
+            case "1":
+                Console.Write("Введите длину стороны a: ");
+                double a = Convert.ToDouble(Console.ReadLine());
+                Console.Write("Введите длину стороны b: ");
+                double b = Convert.ToDouble(Console.ReadLine());
+                double perimeter = 2 * (a + b);
+                Console.WriteLine($"Периметр прямоугольника: {perimeter}");
+                break;
+
+            case "2":
+                Console.Write("Введите радиус r: ");
+                double r = Convert.ToDouble(Console.ReadLine());
+                double area = Math.PI * Math.Pow(r, 2);
+                Console.WriteLine($"Площадь круга: {area}");
+                break;
+
+            case "3":
+                Console.Write("Введите коэффициент a: ");
+                double coefA = Convert.ToDouble(Console.ReadLine());
+                Console.Write("Введите коэффициент b: ");
+                double coefB = Convert.ToDouble(Console.ReadLine());
+                Console.Write("Введите коэффициент c: ");
+                double coefC = Convert.ToDouble(Console.ReadLine());
+                SolveQuadraticEquation(coefA, coefB, coefC);
+                break;
+
+            case "4":
+                Console.Write("Введите сторону a: ");
+                double sideA = Convert.ToDouble(Console.ReadLine());
+                Console.Write("Введите сторону b: ");
+                double sideB = Convert.ToDouble(Console.ReadLine());
+                double hypotenuse = Math.Sqrt(Math.Pow(sideA, 2) + Math.Pow(sideB, 2));
+                Console.WriteLine($"Гипотенуза: {hypotenuse}");
+                break;
+
+            default:
+                Console.WriteLine("Некорректная формула");
+                break;
+        }
+    }
+
+    static void SolveQuadraticEquation(double a, double b, double c)
+    {
+        double discriminant = Math.Pow(b, 2) - 4 * a * c;
+        if (discriminant > 0)
+        {
+            double root1 = (-b + Math.Sqrt(discriminant)) / (2 * a);
+            double root2 = (-b - Math.Sqrt(discriminant)) / (2 * a);
+            Console.WriteLine($"Корни уравнения: x1 = {root1}, x2 = {root2}");
+        }
+        else if (discriminant == 0)
+        {
+            double root = -b / (2 * a);
+            Console.WriteLine($"Корень уравнения: x = {root}");
+        }
+        else
+        {
+            Console.WriteLine("Нет действительных корней");
+        }
+    }
+}
